@@ -52,14 +52,14 @@ APP_BROWSERS = [
 
 # Order here is important: We first try the platform's default browsers and then some specific binaries.
 FALLBACK_BROWSERS = [
-    "windows-default",
+    "firefox",
     "macosx",
     "wslview %s",  # Open default Windows browser from WSL
     "x-www-browser %s",
     "gnome-open %s",
-    "firefox",
     "opera",
     "safari",
+    "windows-default",
 ]
 
 
