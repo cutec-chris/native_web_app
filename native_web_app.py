@@ -1,6 +1,7 @@
 import shutil
 import subprocess
 import webbrowser
+import logging
 from typing import Optional
 
 try:
@@ -93,6 +94,7 @@ def open(url: str, try_app_mode: bool = True) -> None:
                     web_app_process = subprocess.Popen(
                         [exe, f"--app={url}"], close_fds=True, start_new_session=True
                     )
+                    logging.debug('native-web-app using browser: '+exe)
                     ret = web_app_process.poll()
                     if ret:
                         raise OSError(f"Early return: {ret}")
