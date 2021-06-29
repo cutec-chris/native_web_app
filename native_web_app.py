@@ -8,6 +8,7 @@ try:
 except ImportError:
     winreg = None
 
+web_app_process = None
 
 def read_registry_app_path(browser: str) -> Optional[str]:
     """Read an executable path from the Windows registry.
@@ -83,21 +84,22 @@ def open(url: str, try_app_mode: bool = True) -> None:
     """
 
     # We first try to see if we find a browser that offers an app mode:
+    global web_app_process
     if try_app_mode:
         for browser in APP_BROWSERS:
             exe = get_executable(browser)
             if exe:
                 try:
-                    p = subprocess.Popen(
+                    web_app_process = subprocess.Popen(
                         [exe, f"--app={url}"], close_fds=True, start_new_session=True
                     )
-                    ret = p.poll()
+                    ret = web_app_process.poll()
                     if ret:
                         raise OSError(f"Early return: {ret}")
                 except OSError as e:
                     pass
                 else:
-                    return
+                    return web_app_process
 
     # Fallback: We did not find an app-mode browser browser that offers an app mode, so
     for browser in FALLBACK_BROWSERS:
@@ -107,6 +109,7 @@ def open(url: str, try_app_mode: bool = True) -> None:
             pass
         else:
             if b.open(url):
+                web_app_process = b
                 return
 
     raise RuntimeError("could not locate runnable browser")
