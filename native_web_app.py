@@ -89,6 +89,7 @@ def open(url: str, try_app_mode: bool = True) -> None:
     if try_app_mode:
         for browser in APP_BROWSERS:
             exe = get_executable(browser)
+            logging.debug('native-web-app testing browser: %s -> %s' % (str(browser),str(exe)))
             if exe:
                 try:
                     web_app_process = subprocess.Popen(
@@ -107,6 +108,7 @@ def open(url: str, try_app_mode: bool = True) -> None:
     for browser in FALLBACK_BROWSERS:
         try:
             b = webbrowser.get(browser)
+            logging.debug('native-web-app testing fallback: %s -> %s' % (str(browser),str(b)))
         except webbrowser.Error:
             pass
         else:
