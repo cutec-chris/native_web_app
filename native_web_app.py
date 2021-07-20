@@ -1,7 +1,7 @@
 import shutil
 import subprocess
 import webbrowser
-import logging
+import logging,sys
 from typing import Optional
 
 try:
@@ -86,6 +86,9 @@ def open(url: str, try_app_mode: bool = True) -> None:
 
     # We first try to see if we find a browser that offers an app mode:
     global web_app_process
+    if '--debug' in sys.argv[1:]:
+        logging.basicConfig(level=logging.DEBUG)
+        logging.debug('native-web-app debug enabled')
     if try_app_mode:
         for browser in APP_BROWSERS:
             exe = get_executable(browser)
@@ -103,7 +106,6 @@ def open(url: str, try_app_mode: bool = True) -> None:
                     pass
                 else:
                     return web_app_process
-
     # Fallback: We did not find an app-mode browser browser that offers an app mode, so
     for browser in FALLBACK_BROWSERS:
         try:
@@ -115,7 +117,6 @@ def open(url: str, try_app_mode: bool = True) -> None:
             if b.open(url):
                 web_app_process = b
                 return
-
     raise RuntimeError("could not locate runnable browser")
 
 
